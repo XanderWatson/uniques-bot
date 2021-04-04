@@ -12,6 +12,7 @@ def get_prefix(client, message) -> Prefix:
             return pref._prefix
 
 client = commands.Bot(command_prefix = get_prefix)
+client.remove_command('help')
 
 @client.event
 async def on_ready():
