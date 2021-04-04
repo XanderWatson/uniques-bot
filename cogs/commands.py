@@ -8,6 +8,11 @@ from prefixes import Prefix
 
 mongo_setup.global_init()
 
+def getprefix(msg) -> Prefix:
+    for pref in Prefix.objects:
+        if pref._guild_id == str(msg.guild.id):
+            return pref._prefix
+
 class Greetings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -36,6 +41,14 @@ class Greetings(commands.Cog):
 class Settings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_message(self, msg):
+        if msg.content.split()[0] == "prefix":
+            if msg.mentions[0] == self.bot.user:
+                await msg.channel.send(f"My prefix is {getprefix(msg)}")
+
+        await self.bot.process_commands(msg)
 
     @commands.command()
     async def setprefix(self, ctx, *, prefix) -> Prefix:
