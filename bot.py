@@ -6,8 +6,6 @@ from prefixes import Prefix
 
 mongo_setup.global_init()
 
-load_dotenv()
-
 def get_prefix(client, message) -> Prefix:
     for pref in Prefix.objects:
         if pref._guild_id == str(message.guild.id):
@@ -24,5 +22,6 @@ async def on_ready():
 async def reload(ctx, extension):
     await client.reload_extension(f'cogs.{extension}')
 
+load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
 client.run(token)
