@@ -54,7 +54,15 @@ class Settings(commands.Cog):
             if pref._guild_id == str(ctx.guild.id):
                 pref._prefix = prefix
                 pref.save()
-                
+        
+        name = ctx.message.guild.get_member(self.bot.user.id).display_name
+        p = name.split()[-1]
+
+        if p[0] == '(' and p[-1] == ')':
+            await ctx.message.guild.get_member(self.bot.user.id).edit(nick=f"{' '.join(name.split()[:-1])} ({prefix})")
+        else:
+            await ctx.message.guild.get_member(self.bot.user.id).edit(nick=f"{name} ({prefix})")
+
         await ctx.send("Prefix set to {}".format(prefix))
 
     @commands.command()
@@ -203,6 +211,7 @@ class Developer(commands.Cog):
                 embed.set_image(url=memes["data"]["children"][random.randint(1, 25)]["data"]["url"])
                 embed.set_footer(text=f"Meme requested by {ctx.author}")
                 await ctx.send(embed=embed)
+                
 def setup(bot):
     bot.add_cog(Greetings(bot))
     bot.add_cog(Settings(bot))
