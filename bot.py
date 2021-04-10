@@ -6,13 +6,16 @@ from prefixes import Prefix
 
 mongo_setup.global_init()
 
+
 def get_prefix(client, message) -> Prefix:
     for pref in Prefix.objects:
         if pref._guild_id == str(message.guild.id):
             return pref._prefix
 
-client = commands.Bot(command_prefix = get_prefix)
+
+client = commands.Bot(command_prefix=get_prefix)
 client.remove_command('help')
+
 
 @client.event
 async def on_ready():
@@ -20,13 +23,16 @@ async def on_ready():
     client.load_extension('cogs.commands')
     client.load_extension('cogs.help')
 
+
 @client.command()
 async def load(ctx, extension):
     await client.load_extension(f'cogs.{extension}')
 
+
 @client.command()
 async def unload(ctx, extension):
     await client.unload_extension(f'cogs.{extension}')
+
 
 @client.command()
 async def reload(ctx, extension):

@@ -8,10 +8,12 @@ from prefixes import Prefix
 
 mongo_setup.global_init()
 
+
 def getprefix(msg) -> Prefix:
     for pref in Prefix.objects:
         if pref._guild_id == str(msg.guild.id):
             return pref._prefix
+
 
 class Greetings(commands.Cog):
     def __init__(self, bot):
@@ -24,7 +26,7 @@ class Greetings(commands.Cog):
         pref._guild_id = str(guild.id)
         pref._prefix = "unix "
         pref.save()
-        
+
         channel = guild.system_channel
         if channel is not None:
             await channel.send(f"Hello! I'm Uniques! Thanks for inviting me to {guild.name}.")
@@ -32,11 +34,12 @@ class Greetings(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild) -> Prefix:
-        Prefix.objects(_guild_id = str(guild.id)).delete()
+        Prefix.objects(_guild_id=str(guild.id)).delete()
 
     @commands.command()
     async def hello(self, ctx):
         await ctx.send(f"Hello {ctx.author.mention}! I'm Uniques, a bot to help you with all your programming needs!")
+
 
 class Settings(commands.Cog):
     def __init__(self, bot):
@@ -54,7 +57,7 @@ class Settings(commands.Cog):
             if pref._guild_id == str(ctx.guild.id):
                 pref._prefix = prefix
                 pref.save()
-        
+
         name = ctx.message.guild.get_member(self.bot.user.id).display_name
         p = name.split()[-1]
 
@@ -68,20 +71,21 @@ class Settings(commands.Cog):
     @commands.command()
     async def ping(self, ctx):
         await ctx.send(f"My ping time is: {round(self.bot.latency * 1000)} ms")
-    
-    @commands.command(aliases = ['c'])
-    @commands.has_permissions(manage_messages = True)
-    async def clear(self, ctx, amount = 2):
+
+    @commands.command(aliases=['c'])
+    @commands.has_permissions(manage_messages=True)
+    async def clear(self, ctx, amount=2):
         if amount == 0:
             await ctx.channel.purge()
         else:
-            await ctx.channel.purge(limit = amount)
+            await ctx.channel.purge(limit=amount)
+
 
 class Developer(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases = ['git'])
+    @commands.command(aliases=['git'])
     async def github(self, ctx):
         await ctx.send("https://github.com/XanderWatson/uniques-bot")
 
@@ -120,9 +124,9 @@ class Developer(commands.Cog):
             msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
             if msg.content[0:3] == '```' and msg.content[len(msg.content) - 3:] == '```':
                 code = msg.content[3:len(msg.content) - 3]
-            
+
             await ctx.send("Type 'run' to run this code.")
-            toRun = await self.bot.wait_for('message', check = lambda message: message.author == ctx.author)
+            toRun = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
 
             outputs = []
             if toRun.content == "run":
@@ -160,9 +164,9 @@ class Developer(commands.Cog):
             msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
             if msg.content[0:3] == '```' and msg.content[len(msg.content) - 3:] == '```':
                 code = msg.content[3:len(msg.content) - 3]
-            
+
             await ctx.author.send("Type 'run' to run this code.")
-            toRun = await self.bot.wait_for('message', check = lambda message: message.author == ctx.author)
+            toRun = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
 
             outputs = []
             if toRun.content == "run":
@@ -171,13 +175,13 @@ class Developer(commands.Cog):
                 await ctx.author.send(f"Output:\n`{outputs[1]}`")
                 await ctx.author.send(f"RuntimeError:\n`{outputs[2]}`")
 
-    @commands.command(aliases = ['term'])
+    @commands.command(aliases=['term'])
     async def terminal(self, ctx):
         await ctx.send("Welcome to Uniques Terminal!")
 
         while True:
             await ctx.send(f"{str(ctx.author).split('#')[0]}@Uniques:~$")
-            comm = await self.bot.wait_for('message', check = lambda message: message.author == ctx.author)
+            comm = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
             comm = comm.content
 
             if comm == "exit":
@@ -200,18 +204,20 @@ class Developer(commands.Cog):
                 if outputs[1] != '':
                     await ctx.send(f"Error:\n`{outputs[1]}`")
 
-    @commands.command(aliases = ['progmeme', 'pm'])
+    @commands.command(aliases=['progmeme', 'pm'])
     async def meme(self, ctx):
         async with aiohttp.ClientSession() as cs:
             async with cs.get(f"https://www.reddit.com/r/programmerhumour.json") as r:
                 memes = await r.json()
                 embed = discord.Embed(
-                    color = discord.Color.blue(),
+                    color=discord.Color.blue(),
                 )
-                embed.set_image(url=memes["data"]["children"][random.randint(1, 25)]["data"]["url"])
+                embed.set_image(
+                    url=memes["data"]["children"][random.randint(1, 25)]["data"]["url"])
                 embed.set_footer(text=f"Meme requested by {ctx.author}")
                 await ctx.send(embed=embed)
-                
+
+
 def setup(bot):
     bot.add_cog(Greetings(bot))
     bot.add_cog(Settings(bot))

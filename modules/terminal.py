@@ -1,5 +1,6 @@
 import subprocess
 
+
 def runCommand(commandList):
     if commandList[0] == 'sudo':
         process = subprocess.Popen(
@@ -25,4 +26,3 @@ def runCommand(commandList):
         output, error = process.communicate()
 
         return [output, error]
-        

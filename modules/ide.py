@@ -1,5 +1,6 @@
 import subprocess
 
+
 def run(filename, extension, language, code):
     with open(f"{filename}.{extension}", "w") as c:
         c.write(code)
@@ -30,7 +31,7 @@ def run(filename, extension, language, code):
             stderr=subprocess.PIPE,
             universal_newlines=True
         )
-        
+
         output, CompileError = process.communicate()
 
         if CompileError is None:
@@ -54,7 +55,7 @@ def run(filename, extension, language, code):
             stderr=subprocess.PIPE,
             universal_newlines=True
         )
-        
+
         output, CompileError = process.communicate()
 
         if CompileError is None:
