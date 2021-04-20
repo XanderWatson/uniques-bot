@@ -3,8 +3,8 @@ from discord.ext import commands
 import aiohttp
 import random
 from modules import ide
-import mongo_setup
-from prefixes import Prefix
+from db import mongo_setup
+from db.prefixes import Prefix
 
 mongo_setup.global_init()
 

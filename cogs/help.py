@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
 from discord.errors import Forbidden
-import mongo_setup
-from prefixes import Prefix
+from db import mongo_setup
+from db.prefixes import Prefix
 
 mongo_setup.global_init()
 
